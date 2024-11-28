@@ -50,8 +50,11 @@ func (a *applicationDependencies) routes() http.Handler {
 	router.HandlerFunc(http.MethodGet, "/api/v1/users/:uid/reviews", a.requireActivatedUser(a.getUserReviewsHandler))
 	router.HandlerFunc(http.MethodGet, "/api/v1/users/:uid/lists", a.requireActivatedUser(a.getUserListsHandler))
 	router.HandlerFunc(http.MethodPost, "/api/v1/tokens/authentication", a.createAuthenticationTokenHandler)
-	router.HandlerFunc(http.MethodPost, "/api/v1/tokens/password-reset", a.passwordResetTokenHandler)
-	router.HandlerFunc(http.MethodPatch, "/api/v1/users/password", a.passwordResetHandler)
+
+	// Password Reset Section
+	// ======================
+	router.HandlerFunc(http.MethodPost, "/api/v1/tokens/password-reset", a.requireActivatedUser(a.passwordResetTokenHandler))
+	router.HandlerFunc(http.MethodPatch, "/api/v1/users/password", a.requireActivatedUser(a.passwordResetHandler))
 
 	router.HandlerFunc(http.MethodPost, "/api/v1/users", a.registerUserHandler)
 
