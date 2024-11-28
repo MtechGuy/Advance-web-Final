@@ -161,3 +161,23 @@ func (a *applicationDependencies) requireActivatedUser(next http.HandlerFunc) ht
 	// Chain the activated user check after ensuring the user is authenticated
 	return a.requireAuthenticatedUser(fn)
 }
+
+func (a *applicationDependencies) enableCORS(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Add("Vary", "Origin")
+		// Let's check the request origin to see if it's in the trusted list
+		origin := r.Header.Get("Origin")
+		// Once we have a origin from the request header we need need to check
+		if origin != "" {
+			for i := range a.config.cors.trustedOrigins {
+				if origin == a.config.cors.trustedOrigins[i] {
+					w.Header().Set("Access-Control-Allow-Origin", origin)
+					break
+				}
+			}
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}

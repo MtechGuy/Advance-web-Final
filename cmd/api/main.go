@@ -6,6 +6,7 @@ import (
 	"flag"
 	"log/slog"
 	"os"
+	"strings"
 	"sync"
 	"time"
 
@@ -33,6 +34,9 @@ type serverConfig struct {
 		username string
 		password string
 		sender   string
+	}
+	cors struct {
+		trustedOrigins []string
 	}
 }
 
@@ -70,6 +74,12 @@ func main() {
 	flag.StringVar(&setting.smtp.password, "smtp-password", "38d1f200e85005", "SMTP password")
 
 	flag.StringVar(&setting.smtp.sender, "smtp-sender", "Book Club Management Community <no-reply@commentscommunity.alexperaza.net>", "SMTP sender")
+
+	flag.Func("cors-trusted-origins", "Trusted CORS origins (space separated)",
+		func(val string) error {
+			setting.cors.trustedOrigins = strings.Fields(val)
+			return nil
+		})
 
 	flag.Parse()
 
