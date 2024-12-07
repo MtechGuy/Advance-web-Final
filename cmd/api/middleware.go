@@ -189,7 +189,6 @@ func (a *applicationDependencies) enableCORS(next http.Handler) http.Handler {
 				}
 			}
 		}
-
 		next.ServeHTTP(w, r)
 	})
 }
