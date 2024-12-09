@@ -3,11 +3,11 @@ include .envrc
 .PHONY: run/api
 run/api:
 	@echo  'Running application…'
-	@go run ./cmd/api -port=4000 -env=development -limiter-burst=5 -limiter-rps=2 -limiter-enabled=true -cors-trusted-origins="https://www.google.com" -db-dsn=${COMMENTS_DB_DSN} 
+	@go run ./cmd/api -port=4000 -env=development -limiter-burst=5 -limiter-rps=2 -limiter-enabled=true -cors-trusted-origins="https://www.google.com" -db-dsn=${FINAL_DB_DSN} 
 
 .PHONY: db/psql
 db/psql:
-	psql ${COMMENTS_DB_DSN}
+	psql ${FINAL_DB_DSN}
 
 .PHONY: db/migrations/new
 db/migrations/new:
@@ -17,4 +17,4 @@ db/migrations/new:
 .PHONY: db/migrations/up
 db/migrations/up:
 	@echo 'Running up migrations...'
-	migrate -path ./migrations -database ${COMMENTS_DB_DSN} up
+	migrate -path ./migrations -database ${FINAL_DB_DSN} up
